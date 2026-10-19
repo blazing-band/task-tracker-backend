@@ -1,6 +1,6 @@
 from sqlalchemy import BigInteger, Column, String, Table
 
-from backend.database import mapper_registry
+from ..registry import mapper_registry
 from backend.entities import User
 
 users_table = Table(

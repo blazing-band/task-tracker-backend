@@ -6,7 +6,7 @@ from backend.interactors import (
     CreateSession,
     CreateSessionInput,
     CreateSessionOutput,
-    Logout,
+    Logout, RefreshTokens, RefreshTokensInput, RefreshTokensOutput,
 )
 
 from .schemas import PostSessionRequest
@@ -44,12 +44,22 @@ def get_session_router() -> APIRouter:
 
     @session_router.get("/refresh")
     @inject
-    async def refresh_session():  # type: ignore[no-untyped-def]
+    async def refresh_session(
+        interactor: FromDishka[RefreshTokens],
+        request: Request,
+        response: Response,
+    ) -> Response:
         """
         Get refresh token and return new access and refresh token.
         :return:
         """
-        # TODO add refresh logic
-        pass
+        refresh_token = request.cookies.get("refresh_token")
+        if refresh_token is None:
+            raise NotFound("Refresh token not found")
+        result: RefreshTokensOutput = await interactor(RefreshTokensInput(refresh_token=refresh_token))
+        response.set_cookie(key="access_token", value=result.access_token, httponly=True)
+        response.set_cookie(key="refresh_token", value=result.refresh_token, httponly=True)
+        response.status_code = status.HTTP_201_CREATED
+        return response
 
     return session_router
