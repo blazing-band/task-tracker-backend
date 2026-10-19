@@ -2,8 +2,7 @@ from fastapi import APIRouter
 
 from .session import get_session_router
 from .user import get_user_router
-
-# from .tasks import get_tasks_router
+from .task import get_task_router
 
 
 def get_root_router() -> APIRouter:
@@ -12,7 +11,7 @@ def get_root_router() -> APIRouter:
     sub_routers: tuple[APIRouter, ...] = (
         get_user_router(),
         get_session_router(),
-        # get_tasks_router()
+        get_task_router()
     )
 
     for router in sub_routers:
