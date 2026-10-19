@@ -1,8 +1,14 @@
-from fastapi import APIRouter, Response
 from dishka.integrations.fastapi import inject
+from fastapi import APIRouter, Response
 
-from .schemas import GetTasksResponse, CreateTaskRequest, CreateTaskResponse, UpdateTaskStatusResponse, \
-    UpdateTaskTextRequest, UpdateTaskTextResponse
+from .schemas import (
+    CreateTaskRequest,
+    CreateTaskResponse,
+    GetTasksResponse,
+    UpdateTaskStatusResponse,
+    UpdateTaskTextRequest,
+    UpdateTaskTextResponse,
+)
 
 
 def get_task_router() -> APIRouter:

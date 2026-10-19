@@ -12,9 +12,11 @@ class GetTasksResponse(BaseModel):
     status: TaskStatus
     timestamp: datetime
 
+
 class CreateTaskRequest(BaseModel):
     name: str
     text: str
+
 
 class CreateTaskResponse(BaseModel):
     id: int
@@ -23,6 +25,7 @@ class CreateTaskResponse(BaseModel):
     status: TaskStatus
     timestamp: datetime
 
+
 class UpdateTaskStatusResponse(BaseModel):
     id: int
     name: str
@@ -30,9 +33,11 @@ class UpdateTaskStatusResponse(BaseModel):
     status: TaskStatus
     timestamp: datetime
 
+
 class UpdateTaskTextRequest(BaseModel):
     name: str
     text: str
+
 
 class UpdateTaskTextResponse(BaseModel):
     id: int

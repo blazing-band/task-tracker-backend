@@ -21,10 +21,7 @@ class RefreshTokens:
     refresh_token_whitelist_repository: RefreshTokenWhitelistRepository
     user_repository: UserRepository
 
-    async def __call__(
-        self,
-        interactor_input: RefreshTokensInput
-    ) -> RefreshTokensOutput:
+    async def __call__(self, interactor_input: RefreshTokensInput) -> RefreshTokensOutput:
         refresh_token_payload = self.jwt_service.get_payload(interactor_input.refresh_token)
         user = await self.user_repository.get_by_id(int(refresh_token_payload["sub"]))
         access_token = self.jwt_service.create_access_token(user=user)

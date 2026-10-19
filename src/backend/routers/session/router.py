@@ -6,11 +6,14 @@ from backend.interactors import (
     CreateSession,
     CreateSessionInput,
     CreateSessionOutput,
-    Logout, RefreshTokens, RefreshTokensInput, RefreshTokensOutput,
+    Logout,
+    RefreshTokens,
+    RefreshTokensInput,
+    RefreshTokensOutput,
 )
 
-from .schemas import PostSessionRequest
 from ...exceptions import NotFound
+from .schemas import PostSessionRequest
 
 
 def get_session_router() -> APIRouter:
