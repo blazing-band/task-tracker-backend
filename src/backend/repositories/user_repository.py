@@ -24,7 +24,7 @@ class UserRepository:
 
     async def get_by_id(self, user_id: int) -> User:
         try:
-            query = select(User).where(User.id == user_id)
+            query = select(User).where(User.id == user_id)  # type: ignore[arg-type]
             result = await self.session.execute(query)
             return result.scalar_one()
         except NoResultFound as e:
@@ -32,7 +32,7 @@ class UserRepository:
 
     async def get_by_email(self, user_email: str) -> User:
         try:
-            query = select(User).where(User.email == user_email)
+            query = select(User).where(User.email == user_email)  # type: ignore[arg-type]
             result = await self.session.execute(query)
             return result.scalar_one()
         except NoResultFound as e:
@@ -41,9 +41,9 @@ class UserRepository:
     async def add(self, user_data: NewUserData) -> User:
         query = insert(User).returning(User)
         result = await self.session.execute(query, asdict(user_data))
-        return result.scalar()
+        return result.scalar_one()
 
     async def is_exists(self, user_email: str) -> bool:
-        query = select(exists().where(User.email == user_email))
-        result = await self.session.scalar(query)
-        return result
+        query = select(exists().where(User.email == user_email))  # type: ignore[arg-type]
+        result = await self.session.execute(query)
+        return result.scalar_one()

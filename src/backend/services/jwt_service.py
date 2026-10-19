@@ -43,7 +43,7 @@ class JwtService:
         )
         return jwt_token
 
-    def get_payload(self, token: str) -> dict:
+    def get_payload(self, token: str) -> dict[str, str]:
         """
         Decode jwt token and return token payload
         :param token:

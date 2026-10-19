@@ -12,7 +12,7 @@ class DataBaseSettings:
     db_port: str
 
     @property
-    def database_url(self):
+    def database_url(self) -> str:
         return f"{self.db_driver}://{self.db_user}:{self.db_pass}@{self.db_host}:{self.db_port}/{self.db_name}"
 
 

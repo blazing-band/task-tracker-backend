@@ -1,4 +1,5 @@
 from contextlib import asynccontextmanager
+from typing import AsyncIterator
 
 import uvicorn
 from dishka.integrations.fastapi import setup_dishka
@@ -18,7 +19,7 @@ from backend.settings import Settings
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     set_up_logger()
     map_tables()
     yield
@@ -32,7 +33,7 @@ def create_app() -> FastAPI:
     app.include_router(get_root_router())
     app.add_exception_handler(
         exc_class_or_status_code=RequestValidationError,
-        handler=custom_request_validation_error_handler,
+        handler=custom_request_validation_error_handler,  # type: ignore[arg-type]
     )
     app.add_exception_handler(exc_class_or_status_code=Exception, handler=exception_handler)
     container = get_container()

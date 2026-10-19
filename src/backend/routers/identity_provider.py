@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from fastapi import Request
 
 from backend.entities import User
+from backend.exceptions import NotFound
 from backend.repositories import UserRepository
 from backend.services import JwtService
 
@@ -18,6 +19,8 @@ class IdentityProvider:
 
     async def get_user(self, request: Request) -> User:
         access_token = request.cookies.get("access_token")
+        if access_token is None:
+            raise NotFound("Access token not found")
         token_payload = self.jwt_service.get_payload(access_token)
         user_id = int(token_payload["sub"])
         user = await self.user_repository.get_by_id(user_id)

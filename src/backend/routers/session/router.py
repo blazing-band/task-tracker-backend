@@ -10,6 +10,7 @@ from backend.interactors import (
 )
 
 from .schemas import PostSessionRequest
+from ...exceptions import NotFound
 
 
 def get_session_router() -> APIRouter:
@@ -34,18 +35,21 @@ def get_session_router() -> APIRouter:
     async def delete_session(
         interactor: FromDishka[Logout],
         request: Request,
-    ):
+    ) -> Response:
         refresh_token = request.cookies.get("refresh_token")
+        if refresh_token is None:
+            raise NotFound("Refresh token not found")
         await interactor(refresh_token)
-        return
+        return Response(content="", status_code=status.HTTP_200_OK)
 
     @session_router.get("/refresh")
     @inject
-    async def refresh_session():
+    async def refresh_session():  # type: ignore[no-untyped-def]
         """
         Get refresh token and return new access and refresh token.
         :return:
         """
+        # TODO add refresh logic
         pass
 
     return session_router
