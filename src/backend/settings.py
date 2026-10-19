@@ -20,6 +20,7 @@ class DataBaseSettings:
 class AppSettings:
     cors_origins: list[str]
 
+
 @dataclass(frozen=True, slots=True, kw_only=True)
 class JWTSettings:
     jwt_secret: str
@@ -27,11 +28,13 @@ class JWTSettings:
     access_expires_minutes: int
     refresh_expires_minutes: int
 
+
 @dataclass(frozen=True, slots=True, kw_only=True)
 class RedisSettings:
     redis_host: str
     redis_port: int
     redis_password: str
+
 
 @dataclass(frozen=True, slots=True, kw_only=True)
 class Settings:
@@ -44,16 +47,14 @@ class Settings:
 def load_settings() -> Settings:
     return Settings(
         db=DataBaseSettings(
-            db_driver=os.environ['DB_DRIVER'],
-            db_name=os.environ['DB_NAME'],
+            db_driver=os.environ["DB_DRIVER"],
+            db_name=os.environ["DB_NAME"],
             db_user=os.environ["DB_USER"],
             db_pass=os.environ["DB_PASS"],
             db_host=os.environ["DB_HOST"],
-            db_port=os.environ["DB_PORT"]
+            db_port=os.environ["DB_PORT"],
         ),
-        app=AppSettings(
-            cors_origins=os.environ["CORS_ORIGINS"].split(",")
-        ),
+        app=AppSettings(cors_origins=os.environ["CORS_ORIGINS"].split(",")),
         jwt=JWTSettings(
             jwt_secret=os.environ["JWT_SECRET"],
             jwt_algorithm=os.environ["JWT_ALGORITHM"],
@@ -63,6 +64,6 @@ def load_settings() -> Settings:
         redis=RedisSettings(
             redis_host=os.environ["REDIS_HOST"],
             redis_port=int(os.environ["REDIS_PORT"]),
-            redis_password=os.environ["REDIS_PASSWORD"]
-        )
+            redis_password=os.environ["REDIS_PASSWORD"],
+        ),
     )

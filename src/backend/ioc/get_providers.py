@@ -1,10 +1,13 @@
 from dishka import Provider
 
 from .providers import (
-    SettingsProvider, SqlAlchemyProvider, InteractorsProvider, ServicesProvider, RepositoriesProvider,
-
+    InteractorsProvider,
+    RedisProvider,
+    RepositoriesProvider,
+    ServicesProvider,
+    SettingsProvider,
+    SqlAlchemyProvider,
 )
-from .providers import RedisProvider
 
 
 def get_providers() -> list[Provider]:
@@ -14,5 +17,5 @@ def get_providers() -> list[Provider]:
         ServicesProvider(),
         InteractorsProvider(),
         RepositoriesProvider(),
-        RedisProvider()
+        RedisProvider(),
     ]

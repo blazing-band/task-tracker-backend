@@ -1,14 +1,11 @@
-from typing import Annotated
-
 from dishka import FromDishka
-from fastapi import APIRouter, Response, status, Request
 from dishka.integrations.fastapi import inject
+from fastapi import APIRouter, Request, Response, status
 
 from backend.interactors import CreateUser, CreateUserInput, CreateUserOutput
-from .schemas import (
-    GetUserResponse, PostUserRequest
-)
 from backend.routers.identity_provider import IdentityProvider
+
+from .schemas import GetUserResponse, PostUserRequest
 
 
 def get_user_router() -> APIRouter:

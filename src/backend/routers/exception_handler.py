@@ -1,17 +1,19 @@
 import logging
 
 from fastapi import Request, status
+from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
-from fastapi.exceptions import HTTPException, RequestValidationError
 from pydantic import BaseModel
 
 from backend.exceptions import AlreadyExists, NotFound
 
 logger = logging.getLogger(__name__)
 
+
 class ErrorDetails(BaseModel):
     message: str
     code: int
+
 
 async def custom_request_validation_error_handler(request: Request, exc: RequestValidationError) -> JSONResponse:
     errors: dict[str, str] = {}
@@ -50,9 +52,3 @@ async def exception_handler(request: Request, exc: Exception) -> JSONResponse:
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             content={"message": "Internal server error"},
         )
-    # if isinstance(exc, RequestValidationError):
-    #     return JSONResponse(
-    #         status_code=status.HTTP_422, content={"errors": {"password": "too short", "email": "nor right email format"}})
-
-
-

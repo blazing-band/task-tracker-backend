@@ -1,15 +1,21 @@
 import logging
-from typing import Any, AsyncGenerator, AsyncIterable
+from collections.abc import AsyncGenerator, AsyncIterable
+from typing import Any
 
 from dishka import Provider, Scope, provide
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncEngine, AsyncSession
+from sqlalchemy.ext.asyncio import (
+    AsyncEngine,
+    AsyncSession,
+    async_sessionmaker,
+    create_async_engine,
+)
 
 from backend.settings import Settings
 
 logger = logging.getLogger(__name__)
 
-class SqlAlchemyProvider(Provider):
 
+class SqlAlchemyProvider(Provider):
     @provide(scope=Scope.APP)
     async def get_engine(self, settings: Settings) -> AsyncGenerator[AsyncEngine, Any]:
         engine = create_async_engine(url=settings.db.database_url)
@@ -29,4 +35,3 @@ class SqlAlchemyProvider(Provider):
             exc = yield session
             if exc:
                 logger.warning("Some exception while session was used", exc)
-

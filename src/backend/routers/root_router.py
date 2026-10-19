@@ -1,7 +1,8 @@
 from fastapi import APIRouter
 
-from .user import get_user_router
 from .session import get_session_router
+from .user import get_user_router
+
 # from .tasks import get_tasks_router
 
 

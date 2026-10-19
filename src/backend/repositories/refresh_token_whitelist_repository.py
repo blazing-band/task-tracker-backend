@@ -8,7 +8,6 @@ from backend.settings import Settings
 
 @dataclass(frozen=True, slots=True)
 class RefreshTokenWhitelistRepository:
-
     redis: Redis
     settings: Settings
 
@@ -18,7 +17,11 @@ class RefreshTokenWhitelistRepository:
         :param refresh_jti:
         :return:
         """
-        await self.redis.set(name=f"refresh:{refresh_jti}", value=refresh_jti, ex=timedelta(minutes=self.settings.jwt.refresh_expires_minutes))
+        await self.redis.set(
+            name=f"refresh:{refresh_jti}",
+            value=refresh_jti,
+            ex=timedelta(minutes=self.settings.jwt.refresh_expires_minutes),
+        )
 
     async def remove(self, refresh_jti: str) -> None:
         """
@@ -34,6 +37,4 @@ class RefreshTokenWhitelistRepository:
         :return:
         """
         result = await self.redis.get(name=f"refresh:{refresh_jti}")
-        if result == refresh_jti:
-            return True
-        return False
+        return result == refresh_jti

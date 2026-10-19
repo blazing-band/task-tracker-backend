@@ -1,6 +1,7 @@
 import sys
 from logging.config import dictConfig
 
+
 def set_up_logger() -> None:
     logger_conf = {
         "version": 1,

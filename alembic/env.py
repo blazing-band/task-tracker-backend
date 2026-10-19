@@ -7,9 +7,7 @@ from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from alembic import context
-
-
-from backend.database import mapper_registry, map_tables
+from backend.database import map_tables, mapper_registry
 from backend.settings import load_settings
 
 map_tables()

@@ -1,7 +1,7 @@
-from sqlalchemy import Table, Column, BigInteger, String
+from sqlalchemy import BigInteger, Column, String, Table
 
-from backend.entities import User
 from backend.database import mapper_registry
+from backend.entities import User
 
 users_table = Table(
     "user",
@@ -9,7 +9,7 @@ users_table = Table(
     Column("id", BigInteger, primary_key=True),
     Column("username", String, unique=True),
     Column("password", String),
-    Column("email", String, unique=True)
+    Column("email", String, unique=True),
 )
 
 

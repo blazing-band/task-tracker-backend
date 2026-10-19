@@ -1,11 +1,10 @@
-from dishka import Provider, provide, Scope
+from dishka import Provider, Scope, provide
 from redis.asyncio import Redis
 
 from backend.settings import Settings
 
 
 class RedisProvider(Provider):
-
     @provide(scope=Scope.APP)
     async def get_redis(
         self,
@@ -14,5 +13,5 @@ class RedisProvider(Provider):
         return Redis(
             host=settings.redis.redis_host,
             port=settings.redis.redis_port,
-            password=settings.redis.redis_password
+            password=settings.redis.redis_password,
         )

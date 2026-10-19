@@ -6,11 +6,14 @@ from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
 from starlette.middleware.cors import CORSMiddleware
 
-from backend.routers import get_root_router, exception_handler
 from backend.database import map_tables
 from backend.ioc import get_container
 from backend.logger import set_up_logger
-from backend.routers.exception_handler import custom_request_validation_error_handler
+from backend.routers import (
+    custom_request_validation_error_handler,
+    exception_handler,
+    get_root_router,
+)
 from backend.settings import Settings
 
 
@@ -29,12 +32,9 @@ def create_app() -> FastAPI:
     app.include_router(get_root_router())
     app.add_exception_handler(
         exc_class_or_status_code=RequestValidationError,
-        handler=custom_request_validation_error_handler
+        handler=custom_request_validation_error_handler,
     )
-    app.add_exception_handler(
-        exc_class_or_status_code=Exception,
-        handler=exception_handler
-    )
+    app.add_exception_handler(exc_class_or_status_code=Exception, handler=exception_handler)
     container = get_container()
 
     setup_dishka(container, app)
@@ -51,13 +51,9 @@ def create_app() -> FastAPI:
 
     return app
 
+
 def main() -> None:
-    uvicorn.run(
-        app="backend.app:create_app",
-        factory=True,
-        port=8080,
-        reload=True
-    )
+    uvicorn.run(app="backend.app:create_app", factory=True, port=8080, reload=True)
 
 
 if __name__ == "__main__":

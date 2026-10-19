@@ -16,10 +16,7 @@ class IdentityProvider:
     user_repository: UserRepository
     jwt_service: JwtService
 
-    async def get_user(
-        self,
-        request: Request
-    ) -> User:
+    async def get_user(self, request: Request) -> User:
         access_token = request.cookies.get("access_token")
         token_payload = self.jwt_service.get_payload(access_token)
         user_id = int(token_payload["sub"])

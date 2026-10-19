@@ -2,8 +2,14 @@ from dishka import FromDishka
 from dishka.integrations.fastapi import inject
 from fastapi import APIRouter, Request, Response, status
 
-from .schemas import PostSessionRequest, PostSessionResponse
-from backend.interactors import Logout, CreateSession, CreateSessionOutput, CreateSessionInput
+from backend.interactors import (
+    CreateSession,
+    CreateSessionInput,
+    CreateSessionOutput,
+    Logout,
+)
+
+from .schemas import PostSessionRequest
 
 
 def get_session_router() -> APIRouter:
