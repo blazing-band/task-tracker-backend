@@ -32,3 +32,4 @@ dev = [
 [tool.mypy]
 mypy_path = ["src"]
 packages = ["backend"]
+strict = true

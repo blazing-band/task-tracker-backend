@@ -37,3 +37,7 @@ jobs:
       - name: run Ruff formatter
         run:
           uv run ruff format
+
+      - name: Run MyPy
+        run:
+          uv run mypy .
