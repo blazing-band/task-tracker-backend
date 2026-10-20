@@ -57,10 +57,7 @@ class TaskRepository:
             update(Task)
             .where(and_(task_table.c.id == task_id, task_table.c.user_id == user_id))
             .values(
-                status=case(
-                    (task_table.c.status == TaskStatus.DONE, TaskStatus.IN_PROGRESS),
-                    else_=TaskStatus.DONE
-                )
+                status=case((task_table.c.status == TaskStatus.DONE, TaskStatus.IN_PROGRESS), else_=TaskStatus.DONE)
             )
             .returning(Task)
         )
