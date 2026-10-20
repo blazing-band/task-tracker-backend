@@ -1,7 +1,7 @@
 from sqlalchemy import BigInteger, Column, String, Table
 from sqlalchemy.orm import relationship
 
-from backend.entities import User, Task
+from backend.entities import Task, User
 
 from ..registry import mapper_registry
 
@@ -16,10 +16,4 @@ user_table = Table(
 
 
 def map_user_table() -> None:
-    mapper_registry.map_imperatively(
-        User,
-        user_table,
-        properties={
-            "tasks": relationship(Task, back_populates="user")
-        }
-    )
+    mapper_registry.map_imperatively(User, user_table, properties={"tasks": relationship(Task, back_populates="user")})
