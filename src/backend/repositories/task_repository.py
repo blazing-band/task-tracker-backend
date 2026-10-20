@@ -3,6 +3,7 @@ from dataclasses import asdict, dataclass
 from sqlalchemy import and_, case, delete, exists, insert, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from backend.database.models.task import task_table
 from backend.entities import Task, TaskStatus
 
 
@@ -23,7 +24,7 @@ class TaskRepository:
         :param user_id:
         :return:
         """
-        query = select(Task).where(Task.user_id == user_id)  # type: ignore[arg-type]
+        query = select(Task).where(task_table.c.user_id == user_id)
         result = await self.session.execute(query)
         return list(result.scalars().all())
 
@@ -43,25 +44,30 @@ class TaskRepository:
         :param task_id:
         :return:
         """
-        query = delete(Task).where(Task.id == task_id)  # type: ignore[arg-type]
+        query = delete(Task).where(task_table.c.id == task_id)
         await self.session.execute(query)
 
     async def is_exists(self, task_id: int, user_id: int) -> bool:
-        query = select(exists().where(and_(Task.id == task_id, Task.user_id == user_id)))  # type: ignore[arg-type]
+        query = select(exists().where(and_(task_table.c.id == task_id, task_table.c.user_id == user_id)))
         result = await self.session.execute(query)
         return result.scalar_one()
 
     async def change_status(self, task_id: int, user_id: int) -> Task:
         query = (
             update(Task)
-            .where(and_(Task.id == task_id, Task.user_id == user_id))  # type: ignore[arg-type]
-            .values(status=case((Task.status == TaskStatus.DONE, TaskStatus.IN_PROGRESS), else_=TaskStatus.DONE))
-            .returning()
+            .where(and_(task_table.c.id == task_id, task_table.c.user_id == user_id))
+            .values(
+                status=case(
+                    (task_table.c.status == TaskStatus.DONE, TaskStatus.IN_PROGRESS),
+                    else_=TaskStatus.DONE
+                )
+            )
+            .returning(Task)
         )
         result = await self.session.execute(query)
         return result.scalar_one()
 
     async def edit(self, task_id: int, user_id: int, task_name: str, task_text: str) -> Task:
-        query = update(Task).where(and_(Task.id == task_id, Task.user_id == user_id)).returning()  # type: ignore[arg-type]
+        query = update(Task).where(and_(task_table.c.id == task_id, task_table.c.user_id == user_id)).returning(Task)
         result = await self.session.execute(query, {"task_name": task_name, "task_text": task_text})
         return result.scalar_one()

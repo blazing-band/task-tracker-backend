@@ -9,7 +9,7 @@ class TaskStatus(StrEnum):
     DONE = "DONE"
 
 
-@dataclass
+@dataclass()
 class Task:
     id: int
     user_id: int
