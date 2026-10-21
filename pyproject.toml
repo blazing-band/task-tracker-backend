@@ -31,5 +31,5 @@ dev = [
 
 [tool.mypy]
 mypy_path = ["src"]
-packages = ["backend"]
+packages = ["backend", "tests"]
 strict = true

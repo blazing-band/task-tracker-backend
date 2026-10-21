@@ -23,7 +23,7 @@ def redis() -> RedisContainer:
 
 
 @pytest.fixture(scope="session")
-def setup(postgres: PostgresContainer, redis: RedisContainer):
+def setup(postgres: PostgresContainer, redis: RedisContainer) -> None:
     """
     :param postgres:
     :param redis:
@@ -38,7 +38,7 @@ def setup(postgres: PostgresContainer, redis: RedisContainer):
     os.environ["DB_PORT"] = str(postgres.port)
 
     os.environ["REDIS_URL"] = redis.get_container_host_ip()
-    os.environ["REDIS_PASSWORD"] = redis.password
+    os.environ["REDIS_PASSWORD"] = str(redis.password)
     os.environ["REDIS_PORT"] = str(redis.port)
 
     os.environ["JWT_ALGORITHM"] = "HS256"
