@@ -11,9 +11,10 @@ dependencies = [
     "argon2-cffi>=25.1.0",
     "dishka>=1.10.1",
     "fastapi[standard]>=0.141.1",
-    "httpx>=0.28.1",
+    "httpx2>=2.16.0",
     "psycopg[binary]>=3.3.6",
     "pyjwt[crypto]>=2.15.0",
+    "pytest-asyncio>=1.4.0",
     "redis>=8.1.0",
     "sqlalchemy>=2.0.54",
 ]
@@ -33,3 +34,8 @@ dev = [
 mypy_path = ["src"]
 packages = ["backend", "tests"]
 strict = true
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
