@@ -1,6 +1,6 @@
 from dataclasses import asdict, dataclass
 
-from sqlalchemy import and_, case, delete, exists, insert, select, update
+from sqlalchemy import and_, case, cast, delete, exists, insert, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.database.models.task import task_table
@@ -57,7 +57,10 @@ class TaskRepository:
             update(Task)
             .where(and_(task_table.c.id == task_id, task_table.c.user_id == user_id))
             .values(
-                status=case((task_table.c.status == TaskStatus.DONE, TaskStatus.IN_PROGRESS), else_=TaskStatus.DONE)
+                status=cast(
+                    case((task_table.c.status == TaskStatus.DONE, TaskStatus.IN_PROGRESS), else_=TaskStatus.DONE),
+                    task_table.c.status.type,
+                )
             )
             .returning(Task)
         )
@@ -65,6 +68,11 @@ class TaskRepository:
         return result.scalar_one()
 
     async def edit(self, task_id: int, user_id: int, task_name: str, task_text: str) -> Task:
-        query = update(Task).where(and_(task_table.c.id == task_id, task_table.c.user_id == user_id)).returning(Task)
-        result = await self.session.execute(query, {"task_name": task_name, "task_text": task_text})
+        query = (
+            update(Task)
+            .where(and_(task_table.c.id == task_id, task_table.c.user_id == user_id))
+            .values(name=task_name, text=task_text)
+            .returning(Task)
+        )
+        result = await self.session.execute(query)
         return result.scalar_one()
