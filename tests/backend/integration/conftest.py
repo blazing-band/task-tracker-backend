@@ -1,7 +1,8 @@
+import asyncio
 import os
 import sys
+from collections.abc import Iterator
 
-import asyncio
 import pytest
 import pytest_asyncio
 from alembic.config import Config
@@ -22,13 +23,13 @@ if sys.platform == "win32":
 
 
 @pytest.fixture(scope="session")
-def postgres() -> PostgresContainer:
+def postgres() -> Iterator[PostgresContainer]:
     with PostgresContainer("postgres:18.4") as postgres:
         yield postgres
 
 
 @pytest.fixture(scope="session")
-def redis() -> RedisContainer:
+def redis() -> Iterator[RedisContainer]:
     with RedisContainer("redis:8.10.0") as redis:
         yield redis
 

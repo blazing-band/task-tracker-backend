@@ -4,7 +4,6 @@ from httpx import AsyncClient
 
 
 class TestUserRouters:
-
     @pytest.mark.asyncio
     async def test_get_user(
         self,
