@@ -1,5 +1,7 @@
+from typing import Annotated
+
 from dishka.integrations.fastapi import FromDishka, inject
-from fastapi import APIRouter, Request, Response, status
+from fastapi import APIRouter, Query, Request, Response, status
 
 from backend.interactors.get_tasks import GetTasks, GetTasksInput
 from backend.routers.identity_provider import IdentityProvider
@@ -56,7 +58,7 @@ def get_task_router() -> APIRouter:
     @inject
     async def update_task_status(
         request: Request,
-        task_id: int,
+        task_id: Annotated[int, Query(alias="taskId")],
         interactor: FromDishka[UpdateTaskStatus],
         identity_provider: FromDishka[IdentityProvider],
     ) -> TaskDto:
@@ -75,7 +77,7 @@ def get_task_router() -> APIRouter:
     @task_router.patch("/edit")
     @inject
     async def update_task_text(
-        task_id: int,
+        task_id: Annotated[int, Query(alias="taskId")],
         task_data: UpdateTaskTextRequest,
         request: Request,
         interactor: FromDishka[EditTask],
@@ -100,7 +102,7 @@ def get_task_router() -> APIRouter:
     @inject
     async def delete_task(
         request: Request,
-        task_id: int,
+        task_id: Annotated[int, Query(alias="taskId")],
         interactor: FromDishka[DeleteTask],
         identity_provider: FromDishka[IdentityProvider],
     ) -> Response:
