@@ -1,4 +1,4 @@
-from sqlalchemy import BigInteger, Column, DateTime, Enum, ForeignKey, String, Table, Text
+from sqlalchemy import BigInteger, Column, DateTime, Enum, ForeignKey, String, Table, Text, func
 from sqlalchemy.orm import relationship
 
 from backend.entities import Task, TaskStatus, User
@@ -12,8 +12,8 @@ task_table = Table(
     Column("user_id", BigInteger, ForeignKey("user.id"), nullable=False),
     Column("name", String(255), nullable=False),
     Column("text", Text, nullable=False),
-    Column("status", Enum(TaskStatus), nullable=False),
-    Column("timestamp", DateTime, nullable=False),
+    Column("status", Enum(TaskStatus), nullable=False, server_default=TaskStatus.IN_PROGRESS.value),
+    Column("timestamp", DateTime, nullable=False, server_default=func.now()),
 )
 
 
