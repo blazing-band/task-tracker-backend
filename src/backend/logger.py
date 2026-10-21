@@ -31,19 +31,31 @@ def set_up_logger() -> None:
             },
         },
         "loggers": {
-            "django": {
-                "handlers": ["console_stdout", "console_stderr"],
+            "root": {
+                # 'level': 'DEBUG' if settings.logger_settings.debug else 'INFO',
                 "level": "INFO",
-                "propagate": True,
-            },
-            "django.request": {
                 "handlers": ["console_stdout", "console_stderr"],
-                "level": "INFO",
                 "propagate": False,
             },
-            "root": {
+            "uvicorn": {
                 "handlers": ["console_stdout", "console_stderr"],
-                "level": "INFO",
+                "level": "TRACE",
+                "propagate": False,
+            },
+            "uvicorn.access": {
+                "handlers": ["console_stdout", "console_stderr"],
+                "level": "TRACE",
+                "propagate": False,
+            },
+            "uvicorn.error": {
+                "handlers": ["console_stdout", "console_stderr"],
+                "level": "TRACE",
+                "propagate": False,
+            },
+            "uvicorn.asgi": {
+                "handlers": ["console_stdout", "console_stderr"],
+                "level": "TRACE",
+                "propagate": False,
             },
         },
     }
