@@ -52,6 +52,8 @@ testpaths = ["tests"]
 
 [tool.coverage.run]
 branch = true
+# SQLAlchemy asyncio runs code inside greenlets; without this, lines after `await` are lost on Python < 3.14
+concurrency = ["greenlet", "thread"]
 source = ["src/backend"]
 omit = ["src/backend/app.py"]
 
