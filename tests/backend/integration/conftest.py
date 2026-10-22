@@ -1,7 +1,8 @@
 import asyncio
 import os
 import sys
-from collections.abc import Iterator
+from collections.abc import AsyncIterator, Iterator
+from dataclasses import asdict
 
 import pytest
 import pytest_asyncio
@@ -13,6 +14,7 @@ from testcontainers.community.redis import RedisContainer
 
 from alembic import command
 from backend.app import create_app
+from tests.backend.integration.factories import UserCredentials, UserCredentialsFactory
 
 load_dotenv()
 
@@ -45,7 +47,7 @@ def setup(postgres: PostgresContainer, redis: RedisContainer) -> None:
 
     os.environ["REDIS_HOST"] = redis.get_container_host_ip()
     os.environ["REDIS_PASSWORD"] = str(redis.password) if redis.password else ""
-    os.environ["REDIS_PORT"] = str(redis.port)
+    os.environ["REDIS_PORT"] = str(redis.get_exposed_port(redis.port))
 
     os.environ["JWT_ALGORITHM"] = "HS256"
     os.environ["JWT_SECRET"] = "okS7XXCoWD8bDgNkmvbgB6pXgIPIrO0dJygE6MvcLH0"
@@ -58,33 +60,32 @@ def setup(postgres: PostgresContainer, redis: RedisContainer) -> None:
     command.upgrade(alembic_cfg, "head")
 
 
-@pytest_asyncio.fixture(scope="session")
-async def app_client(setup: None) -> AsyncClient:
-    """Создаёт асинхронный тест-клиент."""
-    return AsyncClient(transport=ASGITransport(create_app()), base_url="http://test")
-
-
-@pytest.fixture(scope="session")
-def user_credentials() -> dict[str, str]:
-    return {
-        "username": "test_user",
-        "password": "test_password",
-        "email": "test@example.com",
-    }
-
-
-@pytest_asyncio.fixture(scope="session")
-async def authorized_app_client(
-    app_client: AsyncClient,
-    user_credentials: dict[str, str],
-) -> AsyncClient:
+@pytest_asyncio.fixture
+async def app_client(setup: None) -> AsyncIterator[AsyncClient]:
     """
-    Create authorized AsyncClient
+    Create a fresh AsyncClient for each test, so cookies don't leak between tests.
+    :param setup:
+    :return:
+    """
+    async with AsyncClient(transport=ASGITransport(create_app()), base_url="http://test") as client:
+        yield client
+
+
+@pytest.fixture
+def user_credentials() -> UserCredentials:
+    credentials: UserCredentials = UserCredentialsFactory.build()
+    return credentials
+
+
+@pytest_asyncio.fixture
+async def authorized_app_client(app_client: AsyncClient, user_credentials: UserCredentials) -> AsyncClient:
+    """
+    Register a new user and return client authorized as him
     :param app_client:
     :param user_credentials:
     :return:
     """
-    response = await app_client.post("/api/user", json=user_credentials)
+    response = await app_client.post("/api/user", json=asdict(user_credentials))
     assert response.status_code == 201, f"Expected 201, got {response.status_code}: {response.text}"
 
     access_token = response.cookies.get("access_token")

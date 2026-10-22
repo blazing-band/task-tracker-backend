@@ -23,6 +23,7 @@ where = ["src"]
 
 [dependency-groups]
 dev = [
+    "factory-boy>=3.3.3",
     "mypy>=2.4.0",
     "pytest>=9.1.1",
     "pytest-asyncio>=1.4.0",
@@ -36,6 +37,15 @@ mypy_path = ["src"]
 packages = ["backend", "tests"]
 strict = true
 
+[[tool.mypy.overrides]]
+# factory_boy ships incomplete type hints
+module = ["factory", "factory.*"]
+follow_imports = "skip"
+
+[[tool.mypy.overrides]]
+module = ["tests.backend.integration.factories"]
+disallow_subclassing_any = false
+
 [tool.pytest.ini_options]
 pythonpath = ["src"]
 testpaths = ["tests"]
@@ -43,6 +53,7 @@ testpaths = ["tests"]
 [tool.coverage.run]
 branch = true
 source = ["src/backend"]
+omit = ["src/backend/app.py"]
 
 [tool.coverage.report]
 include = ["src/backend/*"]

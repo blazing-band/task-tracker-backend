@@ -34,7 +34,7 @@ def get_task_router() -> APIRouter:
         result = await interactor(GetTasksInput(user_id=user.id))
         return result
 
-    @task_router.post("")
+    @task_router.post("", status_code=status.HTTP_201_CREATED)
     @inject
     async def create_task(
         request: Request,
