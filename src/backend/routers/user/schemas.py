@@ -7,14 +7,6 @@ class PostUserRequest(BaseModel):
     email: EmailStr
 
 
-class PostUserResponse(BaseModel):
-    pass
-
-
-class GetUserRequest(BaseModel):
-    pass
-
-
 class GetUserResponse(BaseModel):
     id: int
     username: str
