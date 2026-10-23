@@ -90,8 +90,8 @@ async def authorized_app_client(app_client: AsyncClient, user_credentials: UserC
 
     access_token = response.cookies.get("access_token")
     refresh_token = response.cookies.get("refresh_token")
-    assert access_token is not None, "access_token cookie не найден"
-    assert refresh_token is not None, "refresh_token cookie не найден"
+    assert access_token is not None, "access_token cookie not found"
+    assert refresh_token is not None, "refresh_token cookie not found"
 
     app_client.cookies.set("access_token", access_token)
     app_client.cookies.set("refresh_token", refresh_token)

@@ -16,8 +16,8 @@ class TestSessionRouters:
         assert response.status_code == status.HTTP_201_CREATED, (
             f"Expected 201, got {response.status_code}: {response.text}"
         )
-        assert "access_token" in response.cookies, "access_token cookie не найден"
-        assert "refresh_token" in response.cookies, "refresh_token cookie не найден"
+        assert "access_token" in response.cookies, "access_token cookie not found"
+        assert "refresh_token" in response.cookies, "refresh_token cookie not found"
 
     @pytest.mark.asyncio
     async def test_logout(self, authorized_app_client: AsyncClient) -> None:
