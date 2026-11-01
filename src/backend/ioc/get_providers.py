@@ -1,6 +1,7 @@
 from dishka import Provider
 
 from .providers import (
+    CeleryProvider,
     InteractorsProvider,
     RedisProvider,
     RepositoriesProvider,
@@ -18,4 +19,5 @@ def get_providers() -> list[Provider]:
         InteractorsProvider(),
         RepositoriesProvider(),
         RedisProvider(),
+        CeleryProvider(),
     ]

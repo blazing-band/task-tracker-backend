@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from backend.exceptions import AlreadyExists
 from backend.repositories import NewUserData, UserRepository
 from backend.services import JwtService, PasswordHasher, TransactionManager
+from backend.services.email_producer import EmailProducer
 
 
 @dataclass(slots=True, frozen=True)
@@ -24,6 +25,7 @@ class CreateUser:
     user_repository: UserRepository
     password_hasher: PasswordHasher
     jwt_service: JwtService
+    email_producer: EmailProducer
 
     async def __call__(self, interactor_input: CreateUserInput) -> CreateUserOutput:
         async with self.transaction_manager:
@@ -38,5 +40,5 @@ class CreateUser:
             user = await self.user_repository.add(new_user_data)
             access_token = self.jwt_service.create_access_token(user=user)
             refresh_token = self.jwt_service.create_refresh_token(user=user)
-            # TODO send message to user email
+            self.email_producer.send_user_registration_email(user)
             return CreateUserOutput(access_token=access_token, refresh_token=refresh_token)

@@ -37,11 +37,28 @@ class RedisSettings:
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
+class RabbitmqSettings:
+    rabbit_host: str
+    rabbit_port: int
+    rabbit_username: str
+    rabbit_password: str
+    rabbit_virtual_host: str
+
+    @property
+    def url(self) -> str:
+        return (
+            f"amqp://{self.rabbit_username}:{self.rabbit_password}"
+            f"@{self.rabbit_host}:{self.rabbit_port}/{self.rabbit_virtual_host}"
+        )
+
+
+@dataclass(frozen=True, slots=True, kw_only=True)
 class Settings:
     db: DataBaseSettings
     app: AppSettings
     jwt: JWTSettings
     redis: RedisSettings
+    rabbitmq: RabbitmqSettings
 
 
 def load_settings() -> Settings:
@@ -65,5 +82,12 @@ def load_settings() -> Settings:
             redis_host=os.environ["REDIS_HOST"],
             redis_port=int(os.environ["REDIS_PORT"]),
             redis_password=os.environ["REDIS_PASSWORD"],
+        ),
+        rabbitmq=RabbitmqSettings(
+            rabbit_host=os.environ["RABBITMQ_HOST"],
+            rabbit_port=int(os.environ["RABBITMQ_PORT"]),
+            rabbit_username=os.environ["RABBITMQ_USER"],
+            rabbit_password=os.environ["RABBITMQ_PASS"],
+            rabbit_virtual_host=os.environ["RABBITMQ_VHOST"],
         ),
     )

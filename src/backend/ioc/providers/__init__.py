@@ -1,3 +1,4 @@
+from .celery_provider import CeleryProvider as CeleryProvider
 from .interactors_provider import InteractorsProvider as InteractorsProvider
 from .redis_provider import RedisProvider as RedisProvider
 from .repositories_provider import RepositoriesProvider as RepositoriesProvider
