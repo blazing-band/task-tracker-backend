@@ -29,13 +29,13 @@ class CreateUser:
     refresh_token_whitelist_repository: RefreshTokenWhitelistRepository
     # email_producer: EmailProducer
 
-    async def __call__(self, interactor_input: CreateUserInput) -> CreateUserOutput:
-        hashed_pass = self.password_hasher.hash_password(interactor_input.password)
+    async def __call__(self, new_user: CreateUserInput) -> CreateUserOutput:
+        hashed_pass = self.password_hasher.hash_password(new_user.password)
         async with self.transaction_manager:
             new_user_data = NewUserData(
-                username=interactor_input.username,
+                username=new_user.username,
                 password=hashed_pass,
-                email=interactor_input.email,
+                email=new_user.email,
             )
             user = await self.user_repository.add(new_user_data)
             access_token = self.jwt_service.create_access_token(user=user)

@@ -19,17 +19,15 @@ class EditTask:
     task_repository: TaskRepository
     transaction_manager: TransactionManager
 
-    async def __call__(self, interactor_input: EditTaskInput) -> TaskDto:
+    async def __call__(self, task_changes: EditTaskInput) -> TaskDto:
         async with self.transaction_manager:
-            if not await self.task_repository.is_exists(
-                task_id=interactor_input.task_id, user_id=interactor_input.user_id
-            ):
+            if not await self.task_repository.is_exists(task_id=task_changes.task_id, user_id=task_changes.user_id):
                 raise NotFoundError("Task not founded")
             task = await self.task_repository.edit(
-                task_id=interactor_input.task_id,
-                user_id=interactor_input.user_id,
-                task_name=interactor_input.task_name,
-                task_text=interactor_input.task_text,
+                task_id=task_changes.task_id,
+                user_id=task_changes.user_id,
+                task_name=task_changes.task_name,
+                task_text=task_changes.task_text,
             )
             return TaskDto(
                 id=task.id,

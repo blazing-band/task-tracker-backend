@@ -15,6 +15,6 @@ class DeleteTask:
     task_repository: TaskRepository
     transaction_manager: TransactionManager
 
-    async def __call__(self, interactor_input: DeleteTaskInput) -> None:
+    async def __call__(self, task_ref: DeleteTaskInput) -> None:
         async with self.transaction_manager:
-            await self.task_repository.delete(task_id=interactor_input.task_id)
+            await self.task_repository.delete(task_id=task_ref.task_id)

@@ -17,11 +17,11 @@ class CreateTask:
     task_repository: TaskRepository
     transaction_manager: TransactionManager
 
-    async def __call__(self, interactor_input: CreateTaskInput) -> TaskDto:
+    async def __call__(self, new_task: CreateTaskInput) -> TaskDto:
         new_task_data = NewTaskData(
-            user_id=interactor_input.user_id,
-            name=interactor_input.task_name,
-            text=interactor_input.task_text,
+            user_id=new_task.user_id,
+            name=new_task.task_name,
+            text=new_task.task_text,
         )
         async with self.transaction_manager:
             task = await self.task_repository.add(new_task_data)

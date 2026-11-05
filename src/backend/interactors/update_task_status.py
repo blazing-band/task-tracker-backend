@@ -17,15 +17,11 @@ class UpdateTaskStatus:
     task_repository: TaskRepository
     transaction_manager: TransactionManager
 
-    async def __call__(self, interactor_input: UpdateTaskStatusInput) -> TaskDto:
+    async def __call__(self, task_ref: UpdateTaskStatusInput) -> TaskDto:
         async with self.transaction_manager:
-            if not await self.task_repository.is_exists(
-                task_id=interactor_input.task_id, user_id=interactor_input.user_id
-            ):
+            if not await self.task_repository.is_exists(task_id=task_ref.task_id, user_id=task_ref.user_id):
                 raise NotFoundError("Task not founded")
-            task = await self.task_repository.change_status(
-                task_id=interactor_input.task_id, user_id=interactor_input.user_id
-            )
+            task = await self.task_repository.change_status(task_id=task_ref.task_id, user_id=task_ref.user_id)
             return TaskDto(
                 id=task.id,
                 name=task.name,

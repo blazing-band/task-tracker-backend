@@ -13,8 +13,8 @@ class GetTasksInput:
 class GetTasks:
     task_repository: TaskRepository
 
-    async def __call__(self, interactor_input: GetTasksInput) -> list[TaskDto]:
-        tasks = await self.task_repository.get_user_tasks(interactor_input.user_id)
+    async def __call__(self, owner: GetTasksInput) -> list[TaskDto]:
+        tasks = await self.task_repository.get_user_tasks(owner.user_id)
         return [
             TaskDto(
                 id=task.id,

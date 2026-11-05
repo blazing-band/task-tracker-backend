@@ -22,8 +22,8 @@ class RefreshTokens:
     refresh_token_whitelist_repository: RefreshTokenWhitelistRepository
     user_repository: UserRepository
 
-    async def __call__(self, interactor_input: RefreshTokensInput) -> RefreshTokensOutput:
-        refresh_token_payload = self.jwt_service.get_payload(interactor_input.refresh_token)
+    async def __call__(self, session: RefreshTokensInput) -> RefreshTokensOutput:
+        refresh_token_payload = self.jwt_service.get_payload(session.refresh_token)
         old_refresh_jti = refresh_token_payload["jti"]
         if refresh_token_payload["type"] != "refresh":
             raise NotFoundError("Refresh token not found")

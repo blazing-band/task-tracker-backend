@@ -27,11 +27,11 @@ class CreateSession:
 
     async def __call__(
         self,
-        interactor_input: CreateSessionInput,
+        credentials: CreateSessionInput,
     ) -> CreateSessionOutput:
         async with self.transaction_manager:
-            user = await self.user_repository.get_by_email(interactor_input.email)
-            if not self.password_hasher.compare(user.password, interactor_input.password):
+            user = await self.user_repository.get_by_email(credentials.email)
+            if not self.password_hasher.compare(user.password, credentials.password):
                 raise InvalidPasswordError("Password mismatch")
             access_token = self.jwt_service.create_access_token(user=user)
             refresh_token = self.jwt_service.create_refresh_token(user=user)
