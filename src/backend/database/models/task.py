@@ -3,7 +3,7 @@ from sqlalchemy.orm import relationship
 
 from backend.entities import Task, TaskStatus, User
 
-from ..registry import mapper_registry
+from backend.database.registry import mapper_registry
 
 task_table = Table(
     "task",

@@ -12,8 +12,8 @@ from backend.interactors import (
     RefreshTokensOutput,
 )
 
-from ...exceptions import NotFound
-from .schemas import PostSessionRequest
+from backend.exceptions import NotFound
+from backend.routers.session.schemas import PostSessionRequest
 
 
 def get_session_router() -> APIRouter:

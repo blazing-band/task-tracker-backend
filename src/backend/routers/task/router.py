@@ -6,10 +6,10 @@ from fastapi import APIRouter, Query, Request, Response, status
 from backend.interactors.get_tasks import GetTasks, GetTasksInput
 from backend.routers.identity_provider import IdentityProvider
 
-from ...dtos import TaskDto
-from ...interactors import DeleteTask, DeleteTaskInput, EditTask, EditTaskInput, UpdateTaskStatus, UpdateTaskStatusInput
-from ...interactors.create_task import CreateTask, CreateTaskInput
-from .schemas import (
+from backend.dtos import TaskDto
+from backend.interactors import DeleteTask, DeleteTaskInput, EditTask, EditTaskInput, UpdateTaskStatus, UpdateTaskStatusInput
+from backend.interactors.create_task import CreateTask, CreateTaskInput
+from backend.routers.task.schemas import (
     CreateTaskRequest,
     UpdateTaskTextRequest,
 )
