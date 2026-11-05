@@ -14,12 +14,15 @@ from backend.interactors.get_tasks import GetTasks
 
 
 class InteractorsProvider(Provider):
-    create_user = provide(CreateUser, scope=Scope.REQUEST)
-    create_session = provide(CreateSession, scope=Scope.REQUEST)
-    logout = provide(Logout, scope=Scope.REQUEST)
-    refresh_tokens = provide(RefreshTokens, scope=Scope.REQUEST)
-    get_tasks = provide(GetTasks, scope=Scope.REQUEST)
-    create_task = provide(CreateTask, scope=Scope.REQUEST)
-    delete_task = provide(DeleteTask, scope=Scope.REQUEST)
-    update_task_status = provide(UpdateTaskStatus, scope=Scope.REQUEST)
-    edit_task = provide(EditTask, scope=Scope.REQUEST)
+
+    scope = Scope.REQUEST
+
+    create_user = provide(CreateUser)
+    create_session = provide(CreateSession)
+    logout = provide(Logout)
+    refresh_tokens = provide(RefreshTokens)
+    get_tasks = provide(GetTasks)
+    create_task = provide(CreateTask)
+    delete_task = provide(DeleteTask)
+    update_task_status = provide(UpdateTaskStatus)
+    edit_task = provide(EditTask)
