@@ -9,7 +9,7 @@ task_table = Table(
     "task",
     mapper_registry.metadata,
     Column("id", BigInteger, primary_key=True),
-    Column("user_id", BigInteger, ForeignKey("user.id"), nullable=False),
+    Column("user_id", BigInteger, ForeignKey("user.id"), nullable=False, index=True),
     Column("name", String(255), nullable=False),
     Column("text", Text, nullable=False),
     Column("status", Enum(TaskStatus), nullable=False, server_default=TaskStatus.IN_PROGRESS.value),
