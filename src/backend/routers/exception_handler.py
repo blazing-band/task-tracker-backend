@@ -29,26 +29,16 @@ async def custom_request_validation_error_handler(request: Request, exc: Request
     )
 
 
-async def exception_handler(request: Request, exc: Exception) -> JSONResponse:
-    """
-    Catch Exception and crete response with appropriate status code and body.
-    :param request:
-    :param exc:
-    :return:
-    """
-    if isinstance(exc, AlreadyExistsError):
-        return JSONResponse(
-            status_code=status.HTTP_409_CONFLICT,
-            content={"message": exc.message},
-        )
-    elif isinstance(exc, NotFoundError):
-        return JSONResponse(
-            status_code=status.HTTP_404_NOT_FOUND,
-            content={"message": exc.message},
-        )
-    else:
-        logger.error("Unhandled %s:", type(exc).__name__, exc_info=exc)
-        return JSONResponse(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            content={"message": "Internal server error"},
-        )
+async def already_exists_exception_handler(request: Request, exc: AlreadyExistsError) -> JSONResponse:
+    return JSONResponse(
+        status_code=status.HTTP_409_CONFLICT,
+        content={"message": exc.message},
+    )
+
+
+async def not_found_exception_handler(request: Request, exc: NotFoundError) -> JSONResponse:
+    return JSONResponse(
+        status_code=status.HTTP_404_NOT_FOUND,
+        content={"message": exc.message},
+    )
+

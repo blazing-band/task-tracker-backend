@@ -8,12 +8,14 @@ from fastapi.exceptions import RequestValidationError
 from starlette.middleware.cors import CORSMiddleware
 
 from backend.database import map_tables
+from backend.exceptions import AlreadyExistsError, NotFoundError
 from backend.ioc import get_container
 from backend.logger import set_up_logger
 from backend.routers import (
+    already_exists_exception_handler,
     custom_request_validation_error_handler,
-    exception_handler,
     get_root_router,
+    not_found_exception_handler,
 )
 from backend.settings import Settings
 
@@ -31,11 +33,19 @@ def create_app() -> FastAPI:
     app = FastAPI(lifespan=lifespan)
 
     app.include_router(get_root_router())
+
     app.add_exception_handler(
         exc_class_or_status_code=RequestValidationError,
         handler=custom_request_validation_error_handler,  # type: ignore[arg-type]
     )
-    app.add_exception_handler(exc_class_or_status_code=Exception, handler=exception_handler)
+    app.add_exception_handler(
+        exc_class_or_status_code=AlreadyExistsError,
+        handler=already_exists_exception_handler,  # type: ignore[arg-type]
+    )
+    app.add_exception_handler(
+        exc_class_or_status_code=NotFoundError,
+        handler=not_found_exception_handler,  # type: ignore[arg-type]
+    )
     container = get_container()
 
     setup_dishka(container, app)
