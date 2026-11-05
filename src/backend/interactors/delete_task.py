@@ -18,9 +18,4 @@ class DeleteTask:
 
     async def __call__(self, interactor_input: DeleteTaskInput) -> None:
         async with self.transaction_manager:
-            if not await self.task_repository.is_exists(
-                task_id=interactor_input.task_id, user_id=interactor_input.user_id
-            ):
-                raise NotFoundError("Task not founded")
-
             await self.task_repository.delete(task_id=interactor_input.task_id)
