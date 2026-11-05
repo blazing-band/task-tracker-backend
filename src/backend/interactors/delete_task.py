@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 
-from backend.exceptions import NotFoundError
 from backend.repositories import TaskRepository
 from backend.services import TransactionManager
 
