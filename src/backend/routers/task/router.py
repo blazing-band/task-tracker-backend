@@ -3,17 +3,22 @@ from typing import Annotated
 from dishka.integrations.fastapi import FromDishka, inject
 from fastapi import APIRouter, Query, Request, Response, status
 
+from backend.dtos import TaskDto
+from backend.interactors import (
+    DeleteTask,
+    DeleteTaskInput,
+    EditTask,
+    EditTaskInput,
+    UpdateTaskStatus,
+    UpdateTaskStatusInput,
+)
+from backend.interactors.create_task import CreateTask, CreateTaskInput
 from backend.interactors.get_tasks import GetTasks, GetTasksInput
 from backend.routers.identity_provider import IdentityProvider
-
-from backend.dtos import TaskDto
-from backend.interactors import DeleteTask, DeleteTaskInput, EditTask, EditTaskInput, UpdateTaskStatus, UpdateTaskStatusInput
-from backend.interactors.create_task import CreateTask, CreateTaskInput
 from backend.routers.task.schemas import (
     CreateTaskRequest,
     UpdateTaskTextRequest,
 )
-
 
 task_router = APIRouter(prefix="/tasks")
 
@@ -120,4 +125,3 @@ async def delete_task(
     user = await identity_provider.get_user(request)
     await interactor(DeleteTaskInput(task_id=task_id, user_id=user.id))
     return Response(status_code=status.HTTP_204_NO_CONTENT)
-

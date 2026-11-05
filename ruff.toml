@@ -10,6 +10,7 @@ exclude = [
     "**/config",
     "**/migrations",
     "manage.py",
+    "alembic"
 ]
 
 line-length = 120

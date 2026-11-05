@@ -2,12 +2,12 @@ import logging
 from dataclasses import asdict, dataclass
 
 from sqlalchemy import exists, insert, select
-from sqlalchemy.exc import NoResultFound, IntegrityError
+from sqlalchemy.exc import IntegrityError, NoResultFound
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.database.models.user import user_table
 from backend.entities import User
-from backend.exceptions import NotFoundError, AlreadyExistsError
+from backend.exceptions import AlreadyExistsError, NotFoundError
 
 logger = logging.getLogger(__name__)
 

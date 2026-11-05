@@ -1,9 +1,8 @@
 from sqlalchemy import BigInteger, Column, String, Table
 from sqlalchemy.orm import relationship
 
-from backend.entities import Task, User
-
 from backend.database.registry import mapper_registry
+from backend.entities import Task, User
 
 user_table = Table(
     "user",

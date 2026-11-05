@@ -7,7 +7,6 @@ from backend.routers.identity_provider import IdentityProvider
 
 from .schemas import GetUserResponse, PostUserRequest
 
-
 user_router = APIRouter(prefix="/user")
 
 
@@ -33,4 +32,3 @@ async def get_user(
 ) -> GetUserResponse:
     user = await identity_provider.get_user(request)
     return GetUserResponse(id=user.id, username=user.username, email=user.email)
-

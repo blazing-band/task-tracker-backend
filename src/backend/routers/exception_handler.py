@@ -41,4 +41,3 @@ async def not_found_exception_handler(request: Request, exc: NotFoundError) -> J
         status_code=status.HTTP_404_NOT_FOUND,
         content={"message": exc.message},
     )
-

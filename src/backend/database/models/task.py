@@ -1,9 +1,8 @@
 from sqlalchemy import BigInteger, Column, DateTime, Enum, ForeignKey, String, Table, Text, func
 from sqlalchemy.orm import relationship
 
-from backend.entities import Task, TaskStatus, User
-
 from backend.database.registry import mapper_registry
+from backend.entities import Task, TaskStatus, User
 
 task_table = Table(
     "task",
@@ -12,7 +11,12 @@ task_table = Table(
     Column("user_id", BigInteger, ForeignKey("user.id"), nullable=False, index=True),
     Column("name", String(255), nullable=False),
     Column("text", Text, nullable=False),
-    Column("status", Enum(TaskStatus, create_constraint=True, native_enum=False), nullable=False, server_default=TaskStatus.IN_PROGRESS.value),
+    Column(
+        "status",
+        Enum(TaskStatus, create_constraint=True, native_enum=False),
+        nullable=False,
+        server_default=TaskStatus.IN_PROGRESS.value,
+    ),
     Column("timestamp", DateTime, nullable=False, server_default=func.now()),
 )
 

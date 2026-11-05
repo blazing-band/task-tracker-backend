@@ -2,6 +2,7 @@ from dishka import FromDishka
 from dishka.integrations.fastapi import inject
 from fastapi import APIRouter, Request, Response, status
 
+from backend.exceptions import NotFoundError
 from backend.interactors import (
     CreateSession,
     CreateSessionInput,
@@ -11,10 +12,7 @@ from backend.interactors import (
     RefreshTokensInput,
     RefreshTokensOutput,
 )
-
-from backend.exceptions import NotFoundError
 from backend.routers.session.schemas import PostSessionRequest
-
 
 session_router = APIRouter(prefix="/session")
 
@@ -65,4 +63,3 @@ async def refresh_session(
     response.set_cookie(key="refresh_token", value=result.refresh_token, httponly=True)
     response.status_code = status.HTTP_201_CREATED
     return response
-

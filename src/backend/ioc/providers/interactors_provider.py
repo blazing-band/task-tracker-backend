@@ -14,7 +14,6 @@ from backend.interactors.get_tasks import GetTasks
 
 
 class InteractorsProvider(Provider):
-
     scope = Scope.REQUEST
 
     create_user = provide(CreateUser)
