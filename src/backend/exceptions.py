@@ -1,4 +1,4 @@
-class AppException(Exception):
+class AppExceptionError(Exception):
     """
     Root exception to all application exceptions
     """
@@ -8,19 +8,19 @@ class AppException(Exception):
         self.message = message
 
 
-class NotFound(AppException):
+class NotFoundError(AppExceptionError):
     """
     Raised when a requested resource was not found
     """
 
 
-class AlreadyExists(AppException):
+class AlreadyExistsError(AppExceptionError):
     """
     Raised when a requested resource already exists
     """
 
 
-class InvalidPassword(AppException):
+class InvalidPasswordError(AppExceptionError):
     """
     Raised when a requested password is invalid
     """

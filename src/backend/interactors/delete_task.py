@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from backend.exceptions import NotFound
+from backend.exceptions import NotFoundError
 from backend.repositories import TaskRepository
 from backend.services import TransactionManager
 
@@ -21,6 +21,6 @@ class DeleteTask:
             if not await self.task_repository.is_exists(
                 task_id=interactor_input.task_id, user_id=interactor_input.user_id
             ):
-                raise NotFound("Task not founded")
+                raise NotFoundError("Task not founded")
 
             await self.task_repository.delete(task_id=interactor_input.task_id)

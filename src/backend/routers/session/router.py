@@ -12,7 +12,7 @@ from backend.interactors import (
     RefreshTokensOutput,
 )
 
-from backend.exceptions import NotFound
+from backend.exceptions import NotFoundError
 from backend.routers.session.schemas import PostSessionRequest
 
 
@@ -41,7 +41,7 @@ async def delete_session(
 ) -> Response:
     refresh_token = request.cookies.get("refresh_token")
     if refresh_token is None:
-        raise NotFound("Refresh token not found")
+        raise NotFoundError("Refresh token not found")
     await interactor(refresh_token)
     return Response(content="", status_code=status.HTTP_200_OK)
 
@@ -59,7 +59,7 @@ async def refresh_session(
     """
     refresh_token = request.cookies.get("refresh_token")
     if refresh_token is None:
-        raise NotFound("Refresh token not found")
+        raise NotFoundError("Refresh token not found")
     result: RefreshTokensOutput = await interactor(RefreshTokensInput(refresh_token=refresh_token))
     response.set_cookie(key="access_token", value=result.access_token, httponly=True)
     response.set_cookie(key="refresh_token", value=result.refresh_token, httponly=True)

@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 from backend.dtos import TaskDto
-from backend.exceptions import NotFound
+from backend.exceptions import NotFoundError
 from backend.repositories import TaskRepository
 from backend.services import TransactionManager
 
@@ -24,7 +24,7 @@ class EditTask:
             if not await self.task_repository.is_exists(
                 task_id=interactor_input.task_id, user_id=interactor_input.user_id
             ):
-                raise NotFound("Task not founded")
+                raise NotFoundError("Task not founded")
             task = await self.task_repository.edit(
                 task_id=interactor_input.task_id,
                 user_id=interactor_input.user_id,

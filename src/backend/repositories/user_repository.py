@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.database.models.user import user_table
 from backend.entities import User
-from backend.exceptions import NotFound
+from backend.exceptions import NotFoundError
 
 logger = logging.getLogger(__name__)
 
@@ -29,7 +29,7 @@ class UserRepository:
             result = await self.session.execute(query)
             return result.scalar_one()
         except NoResultFound as e:
-            raise NotFound("User not found") from e
+            raise NotFoundError("User not found") from e
 
     async def get_by_email(self, user_email: str) -> User:
         try:
@@ -37,7 +37,7 @@ class UserRepository:
             result = await self.session.execute(query)
             return result.scalar_one()
         except NoResultFound as e:
-            raise NotFound("User not found") from e
+            raise NotFoundError("User not found") from e
 
     async def add(self, user_data: NewUserData) -> User:
         query = insert(User).returning(User)

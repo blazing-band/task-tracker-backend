@@ -5,7 +5,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
-from backend.exceptions import AlreadyExists, NotFound
+from backend.exceptions import AlreadyExistsError, NotFoundError
 
 logger = logging.getLogger(__name__)
 
@@ -36,12 +36,12 @@ async def exception_handler(request: Request, exc: Exception) -> JSONResponse:
     :param exc:
     :return:
     """
-    if isinstance(exc, AlreadyExists):
+    if isinstance(exc, AlreadyExistsError):
         return JSONResponse(
             status_code=status.HTTP_409_CONFLICT,
             content={"message": exc.message},
         )
-    elif isinstance(exc, NotFound):
+    elif isinstance(exc, NotFoundError):
         return JSONResponse(
             status_code=status.HTTP_404_NOT_FOUND,
             content={"message": exc.message},

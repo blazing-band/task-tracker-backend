@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from backend.exceptions import InvalidPassword
+from backend.exceptions import InvalidPasswordError
 from backend.repositories import RefreshTokenWhitelistRepository, UserRepository
 from backend.services import JwtService, PasswordHasher, TransactionManager
 
@@ -32,7 +32,7 @@ class CreateSession:
         async with self.transaction_manager:
             user = await self.user_repository.get_by_email(interactor_input.email)
             if not self.password_hasher.compare(user.password, interactor_input.password):
-                raise InvalidPassword("Password mismatch")
+                raise InvalidPasswordError("Password mismatch")
             access_token = self.jwt_service.create_access_token(user=user)
             refresh_token = self.jwt_service.create_refresh_token(user=user)
             await self.refresh_token_whitelist_repository.add(refresh_token)
