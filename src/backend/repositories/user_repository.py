@@ -24,17 +24,17 @@ class UserRepository:
     session: AsyncSession
 
     async def get_by_id(self, user_id: int) -> User:
+        query = select(User).where(user_table.c.id == user_id)
+        result = await self.session.execute(query)
         try:
-            query = select(User).where(user_table.c.id == user_id)
-            result = await self.session.execute(query)
             return result.scalar_one()
         except NoResultFound as e:
             raise NotFoundError("User not found") from e
 
     async def get_by_email(self, user_email: str) -> User:
+        query = select(User).where(user_table.c.email == user_email)
+        result = await self.session.execute(query)
         try:
-            query = select(User).where(user_table.c.email == user_email)
-            result = await self.session.execute(query)
             return result.scalar_one()
         except NoResultFound as e:
             raise NotFoundError("User not found") from e
