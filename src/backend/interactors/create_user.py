@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 
-from backend.exceptions import AlreadyExistsError
 from backend.repositories import NewUserData, UserRepository
 from backend.services import JwtService, PasswordHasher, TransactionManager
 from backend.services.email_producer import EmailProducer
@@ -30,8 +29,6 @@ class CreateUser:
     async def __call__(self, interactor_input: CreateUserInput) -> CreateUserOutput:
         hashed_pass = self.password_hasher.hash_password(interactor_input.password)
         async with self.transaction_manager:
-            if await self.user_repository.is_exists(interactor_input.email):
-                raise AlreadyExistsError("User already exists")
             new_user_data = NewUserData(
                 username=interactor_input.username,
                 password=hashed_pass,

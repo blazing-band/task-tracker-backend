@@ -2,12 +2,12 @@ import logging
 from dataclasses import asdict, dataclass
 
 from sqlalchemy import exists, insert, select
-from sqlalchemy.exc import NoResultFound
+from sqlalchemy.exc import NoResultFound, IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.database.models.user import user_table
 from backend.entities import User
-from backend.exceptions import NotFoundError
+from backend.exceptions import NotFoundError, AlreadyExistsError
 
 logger = logging.getLogger(__name__)
 
@@ -41,7 +41,10 @@ class UserRepository:
 
     async def add(self, user_data: NewUserData) -> User:
         query = insert(User).returning(User)
-        result = await self.session.execute(query, asdict(user_data))
+        try:
+            result = await self.session.execute(query, asdict(user_data))
+        except IntegrityError as e:
+            raise AlreadyExistsError("Wrong credentials for user") from e
         return result.scalar_one()
 
     async def is_exists(self, user_email: str) -> bool:
