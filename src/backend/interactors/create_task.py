@@ -25,4 +25,10 @@ class CreateTask:
         )
         async with self.transaction_manager:
             task = await self.task_repository.add(new_task_data)
-            return TaskDto(**task.to_dict())
+            return TaskDto(
+                id=task.id,
+                name=task.name,
+                text=task.text,
+                status=task.status,
+                timestamp=task.timestamp,
+            )

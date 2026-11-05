@@ -15,4 +15,13 @@ class GetTasks:
 
     async def __call__(self, interactor_input: GetTasksInput) -> list[TaskDto]:
         tasks = await self.task_repository.get_user_tasks(interactor_input.user_id)
-        return [TaskDto(**task.to_dict()) for task in tasks]
+        return [
+            TaskDto(
+                id=task.id,
+                name=task.name,
+                text=task.text,
+                status=task.status,
+                timestamp=task.timestamp,
+            )
+            for task in tasks
+        ]

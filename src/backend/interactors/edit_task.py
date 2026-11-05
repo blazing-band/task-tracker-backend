@@ -31,4 +31,10 @@ class EditTask:
                 task_name=interactor_input.task_name,
                 task_text=interactor_input.task_text,
             )
-            return TaskDto(**task.to_dict())
+            return TaskDto(
+                id=task.id,
+                name=task.name,
+                text=task.text,
+                status=task.status,
+                timestamp=task.timestamp,
+            )

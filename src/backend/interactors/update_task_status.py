@@ -26,4 +26,10 @@ class UpdateTaskStatus:
             task = await self.task_repository.change_status(
                 task_id=interactor_input.task_id, user_id=interactor_input.user_id
             )
-            return TaskDto(**task.to_dict())
+            return TaskDto(
+                id=task.id,
+                name=task.name,
+                text=task.text,
+                status=task.status,
+                timestamp=task.timestamp,
+            )
