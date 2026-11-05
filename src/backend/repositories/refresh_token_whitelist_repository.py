@@ -36,5 +36,5 @@ class RefreshTokenWhitelistRepository:
         Check is token in whitelist
         :return:
         """
-        result = await self.redis.get(name=f"refresh:{refresh_jti}")
-        return result == refresh_jti
+        result: int = await self.redis.exists(f"refresh:{refresh_jti}")
+        return result == 1

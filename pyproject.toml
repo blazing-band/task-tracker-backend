@@ -17,6 +17,7 @@ dependencies = [
     "pyjwt[crypto]>=2.15.0",
     "redis>=8.1.0",
     "sqlalchemy>=2.0.54",
+    "testcontainers[rabbitmq]>=4.15.0",
 ]
 
 [tool.setuptools.packages.find]

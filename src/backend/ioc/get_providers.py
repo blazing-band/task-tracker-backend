@@ -1,7 +1,7 @@
 from dishka import Provider
 
 from .providers import (
-    CeleryProvider,
+    # CeleryProvider,  # TODO: celery is disabled for now
     InteractorsProvider,
     RedisProvider,
     RepositoriesProvider,
@@ -19,5 +19,5 @@ def get_providers() -> list[Provider]:
         InteractorsProvider(),
         RepositoriesProvider(),
         RedisProvider(),
-        CeleryProvider(),
+        # CeleryProvider(),
     ]

@@ -35,5 +35,6 @@ class CreateSession:
                 raise InvalidPasswordError("Password mismatch")
             access_token = self.jwt_service.create_access_token(user=user)
             refresh_token = self.jwt_service.create_refresh_token(user=user)
-            await self.refresh_token_whitelist_repository.add(refresh_token)
+            refresh_jti = self.jwt_service.get_payload(refresh_token)["jti"]
+            await self.refresh_token_whitelist_repository.add(refresh_jti)
             return CreateSessionOutput(access_token=access_token, refresh_token=refresh_token)

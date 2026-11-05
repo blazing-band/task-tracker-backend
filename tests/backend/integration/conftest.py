@@ -12,6 +12,7 @@ from httpx import ASGITransport, AsyncClient
 from testcontainers.community.postgres import PostgresContainer
 from testcontainers.community.redis import RedisContainer
 
+# from testcontainers.community.rabbitmq import RabbitMqContainer  # TODO: celery is disabled for now
 from alembic import command
 from backend.app import create_app
 from tests.backend.integration.factories import UserCredentials, UserCredentialsFactory
@@ -36,6 +37,12 @@ def redis() -> Iterator[RedisContainer]:
         yield redis
 
 
+# @pytest.fixture(scope="session")
+# def rabbitmq() -> Iterator[RabbitMqContainer]:
+#     with RabbitMqContainer("rabbitmq:4.4.0") as rabbitmq:
+#         yield rabbitmq
+
+
 @pytest.fixture(scope="session", autouse=True)
 def setup(postgres: PostgresContainer, redis: RedisContainer) -> None:
     os.environ["DB_DRIVER"] = "postgresql+psycopg"
@@ -48,6 +55,12 @@ def setup(postgres: PostgresContainer, redis: RedisContainer) -> None:
     os.environ["REDIS_HOST"] = redis.get_container_host_ip()
     os.environ["REDIS_PASSWORD"] = str(redis.password) if redis.password else ""
     os.environ["REDIS_PORT"] = str(redis.get_exposed_port(redis.port))
+
+    # os.environ["RABBITMQ_HOST"] = rabbitmq.get_container_host_ip()
+    # os.environ["RABBITMQ_PORT"] = str(rabbitmq.get_exposed_port(rabbitmq.port))
+    # os.environ["RABBITMQ_USER"] = rabbitmq.username
+    # os.environ["RABBITMQ_PASS"] = rabbitmq.password
+    # os.environ["RABBITMQ_VHOST"] = rabbitmq.vhost
 
     os.environ["JWT_ALGORITHM"] = "HS256"
     os.environ["JWT_SECRET"] = "okS7XXCoWD8bDgNkmvbgB6pXgIPIrO0dJygE6MvcLH0"
