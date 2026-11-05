@@ -12,7 +12,7 @@ task_table = Table(
     Column("user_id", BigInteger, ForeignKey("user.id"), nullable=False, index=True),
     Column("name", String(255), nullable=False),
     Column("text", Text, nullable=False),
-    Column("status", Enum(TaskStatus), nullable=False, server_default=TaskStatus.IN_PROGRESS.value),
+    Column("status", Enum(TaskStatus, create_constraint=True, native_enum=False), nullable=False, server_default=TaskStatus.IN_PROGRESS.value),
     Column("timestamp", DateTime, nullable=False, server_default=func.now()),
 )
 
