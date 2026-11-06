@@ -5,7 +5,7 @@ from fastapi import Request
 from backend.entities import User
 from backend.exceptions import NotFoundError
 from backend.repositories import UserRepository
-from backend.services import JwtService
+from backend.services.jwt_service import JwtService
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
