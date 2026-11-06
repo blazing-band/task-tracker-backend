@@ -17,7 +17,7 @@ from backend.routers import (
     get_root_router,
     not_found_exception_handler,
 )
-from backend.settings import Settings, load_settings
+from backend.settings import load_settings
 
 
 @asynccontextmanager
