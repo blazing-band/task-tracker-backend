@@ -9,7 +9,7 @@ from starlette.middleware.cors import CORSMiddleware
 
 from backend.database import map_tables
 from backend.exceptions import AlreadyExistsError, NotFoundError
-from backend.ioc import get_container
+from backend.ioc import create_container
 from backend.logger import set_up_logger
 from backend.routers import (
     already_exists_exception_handler,
@@ -17,7 +17,7 @@ from backend.routers import (
     get_root_router,
     not_found_exception_handler,
 )
-from backend.settings import Settings
+from backend.settings import Settings, load_settings
 
 
 @asynccontextmanager
@@ -46,11 +46,12 @@ def create_app() -> FastAPI:
         exc_class_or_status_code=NotFoundError,
         handler=not_found_exception_handler,  # type: ignore[arg-type]
     )
-    container = get_container()
+
+    settings = load_settings()
+
+    container = create_container(settings)
 
     setup_dishka(container, app)
-
-    settings = container.get_sync(Settings)
 
     app.add_middleware(
         CORSMiddleware,

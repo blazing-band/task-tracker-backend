@@ -6,14 +6,12 @@ from .providers import (
     RedisProvider,
     RepositoriesProvider,
     ServicesProvider,
-    SettingsProvider,
     SqlAlchemyProvider,
 )
 
 
 def get_providers() -> list[Provider]:
     return [
-        SettingsProvider(),
         SqlAlchemyProvider(),
         ServicesProvider(),
         InteractorsProvider(),
