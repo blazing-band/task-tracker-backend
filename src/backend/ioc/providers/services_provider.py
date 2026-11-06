@@ -1,7 +1,6 @@
 from dishka import Provider, Scope, provide
 
-from backend.routers.identity_provider import IdentityProvider
-from backend.services import JwtService, PasswordHasher, TransactionManager
+from backend.services import IdentityProvider, JwtService, PasswordHasher, TransactionManager
 
 # TODO: celery is disabled for now
 # from backend.services import EmailProducer

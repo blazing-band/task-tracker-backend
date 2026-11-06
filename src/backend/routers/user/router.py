@@ -3,8 +3,8 @@ from dishka.integrations.fastapi import inject
 from fastapi import APIRouter, Request, Response, status
 
 from backend.interactors import CreateUser, CreateUserInput, CreateUserOutput
-from backend.routers.identity_provider import IdentityProvider
 
+from ...services import IdentityProvider
 from .schemas import GetUserResponse, PostUserRequest
 
 user_router = APIRouter(prefix="/user")

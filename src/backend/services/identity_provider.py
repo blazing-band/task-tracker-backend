@@ -11,7 +11,7 @@ from backend.services import JwtService
 @dataclass(frozen=True, slots=True, kw_only=True)
 class IdentityProvider:
     """
-    Check jwt token from request and return User
+    Check jwt token from Fastapi Request object and return User
     """
 
     user_repository: UserRepository

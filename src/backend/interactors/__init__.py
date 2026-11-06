@@ -17,7 +17,6 @@ from .delete_task import DeleteTaskInput as DeleteTaskInput
 from .edit_task import EditTask as EditTask
 from .edit_task import EditTaskInput as EditTaskInput
 from .get_tasks import GetTasks as GetTasks
-from .get_tasks import GetTasksInput as GetTasksInput
 from .logout import Logout as Logout
 from .refresh_tokens import RefreshTokens as RefreshTokens
 from .refresh_tokens import RefreshTokensInput as RefreshTokensInput

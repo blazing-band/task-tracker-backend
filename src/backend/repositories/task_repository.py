@@ -38,13 +38,14 @@ class TaskRepository:
         result = await self.session.execute(query, asdict(task_data))
         return result.scalar_one()
 
-    async def delete(self, task_id: int) -> None:
+    async def delete(self, task_id: int, user_id: int) -> None:
         """
         Delete task
         :param task_id:
+        :param user_id:
         :return:
         """
-        query = delete(Task).where(task_table.c.id == task_id)
+        query = delete(Task).where(and_(task_table.c.id == task_id, task_table.c.user_id == user_id))
         await self.session.execute(query)
 
     async def is_exists(self, task_id: int, user_id: int) -> bool:
