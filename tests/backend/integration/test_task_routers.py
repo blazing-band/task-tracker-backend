@@ -76,3 +76,21 @@ class TestTaskRouters:
         assert response.status_code == status.HTTP_204_NO_CONTENT, (
             f"Expected 204, got {response.status_code}: {response.text}"
         )
+
+    @pytest.mark.asyncio
+    async def test_delete_task_with_unauthorized_client(self, authorized_app_client: AsyncClient) -> None:
+        task_id = 4
+
+        response = await authorized_app_client.delete(f"/api/tasks?taskId={task_id}")
+        assert response.status_code == status.HTTP_204_NO_CONTENT, (
+            f"Expected 204, got {response.status_code}: {response.text}"
+        )
+
+    @pytest.mark.asyncio
+    async def test_delete_not_existing_task(self, app_client: AsyncClient) -> None:
+        task_id = 4
+
+        response = await app_client.delete(f"/api/tasks?taskId={task_id}")
+        assert response.status_code == status.HTTP_404_NOT_FOUND, (
+            f"Expected 404, got {response.status_code}: {response.text}"
+        )
