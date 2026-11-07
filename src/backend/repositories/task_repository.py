@@ -1,0 +1,85 @@
+from dataclasses import asdict, dataclass
+
+from sqlalchemy import and_, case, cast, delete, exists, insert, select, update
+from sqlalchemy.exc import NoResultFound
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from backend.database.models.task import task_table
+from backend.entities import Task, TaskStatus
+from backend.exceptions import NotFoundError
+
+
+@dataclass(slots=True, frozen=True)
+class NewTaskData:
+    user_id: int
+    name: str
+    text: str
+
+
+@dataclass(frozen=True, slots=True)
+class TaskRepository:
+    session: AsyncSession
+
+    async def get_user_tasks(self, user_id: int) -> list[Task]:
+        """
+        Return all users tasks
+        :param user_id:
+        :return:
+        """
+        query = select(Task).where(task_table.c.user_id == user_id)
+        result = await self.session.execute(query)
+        return list(result.scalars().all())
+
+    async def add(self, task_data: NewTaskData) -> Task:
+        """
+        Create new task and return it.
+        :param task_data:
+        :return:
+        """
+        query = insert(Task).returning(Task)
+        result = await self.session.execute(query, asdict(task_data))
+        return result.scalar_one()
+
+    async def delete(self, task_id: int, user_id: int) -> None:
+        """
+        Delete task
+        :param task_id:
+        :param user_id:
+        :return:
+        """
+        query = delete(Task).where(and_(task_table.c.id == task_id, task_table.c.user_id == user_id))
+        await self.session.execute(query)
+
+    async def is_exists(self, task_id: int, user_id: int) -> bool:
+        query = select(exists().where(and_(task_table.c.id == task_id, task_table.c.user_id == user_id)))
+        result = await self.session.execute(query)
+        return result.scalar_one()
+
+    async def change_status(self, task_id: int, user_id: int) -> Task:
+        query = (
+            update(Task)
+            .where(and_(task_table.c.id == task_id, task_table.c.user_id == user_id))
+            .values(
+                status=cast(
+                    case((task_table.c.status == TaskStatus.DONE, TaskStatus.IN_PROGRESS), else_=TaskStatus.DONE),
+                    task_table.c.status.type,
+                )
+            )
+            .returning(Task)
+        )
+        result = await self.session.execute(query)
+        return result.scalar_one()
+
+    async def get(self, task_id: int, user_id: int) -> Task:
+        """
+        Return user's task tracked by the session, or None if it doesn't exist.
+        :param task_id:
+        :param user_id:
+        :return:
+        """
+        query = select(Task).where(and_(task_table.c.id == task_id, task_table.c.user_id == user_id))
+        result = await self.session.execute(query)
+        try:
+            return result.scalar_one()
+        except NoResultFound as e:
+            raise NotFoundError("Task not founded") from e
