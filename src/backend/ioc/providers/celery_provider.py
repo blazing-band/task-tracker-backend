@@ -1,11 +1,15 @@
-# TODO: celery is disabled for now
-# from celery import Celery
-# from dishka import Provider, Scope, provide
+from collections.abc import Iterator
 
-# from backend.settings import Settings
+from celery import Celery
+from dishka import Provider, Scope, provide
+
+from backend.celery_app import create_celery
+from backend.settings import Settings
 
 
-# class CeleryProvider(Provider):
-#     @provide(scope=Scope.APP)
-#     async def get_celery(self, settings: Settings) -> Celery:
-#         return Celery(broker=settings.rabbitmq.url)
+class CeleryProvider(Provider):
+    @provide(scope=Scope.APP)
+    def get_celery(self, settings: Settings) -> Iterator[Celery]:
+        celery = create_celery(settings.rabbitmq)
+        yield celery
+        celery.close()

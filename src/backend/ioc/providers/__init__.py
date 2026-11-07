@@ -1,5 +1,5 @@
-# TODO: celery is disabled for now
-# from .celery_provider import CeleryProvider as CeleryProvider
+from .celery_provider import CeleryProvider as CeleryProvider
+from .celery_services_provider import CeleryServicesProvider as CeleryServicesProvider
 from .interactors_provider import InteractorsProvider as InteractorsProvider
 from .redis_provider import RedisProvider as RedisProvider
 from .repositories_provider import RepositoriesProvider as RepositoriesProvider
