@@ -1,5 +1,6 @@
 import os
 from dataclasses import dataclass
+from enum import StrEnum
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -36,21 +37,35 @@ class RedisSettings:
     redis_password: str
 
 
-# TODO: celery is disabled for now
-# @dataclass(frozen=True, slots=True, kw_only=True)
-# class RabbitmqSettings:
-#     rabbit_host: str
-#     rabbit_port: int
-#     rabbit_username: str
-#     rabbit_password: str
-#     rabbit_virtual_host: str
+@dataclass(frozen=True, slots=True, kw_only=True)
+class RabbitmqSettings:
+    rabbit_host: str
+    rabbit_port: int
+    rabbit_username: str
+    rabbit_password: str
+    rabbit_virtual_host: str
 
-#     @property
-#     def url(self) -> str:
-#         return (
-#             f"amqp://{self.rabbit_username}:{self.rabbit_password}"
-#             f"@{self.rabbit_host}:{self.rabbit_port}/{self.rabbit_virtual_host}"
-#         )
+    @property
+    def url(self) -> str:
+        return (
+            f"amqp://{self.rabbit_username}:{self.rabbit_password}"
+            f"@{self.rabbit_host}:{self.rabbit_port}/{self.rabbit_virtual_host}"
+        )
+
+
+class SmtpSecurity(StrEnum):
+    SSL = "ssl"
+    STARTTLS = "starttls"
+    NONE = "none"
+
+
+@dataclass(frozen=True, slots=True, kw_only=True)
+class SMTPSettings:
+    smtp_host: str
+    smtp_port: int
+    smtp_login: str
+    smtp_password: str
+    smtp_security: SmtpSecurity
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -59,7 +74,8 @@ class Settings:
     app: AppSettings
     jwt: JWTSettings
     redis: RedisSettings
-    # rabbitmq: RabbitmqSettings
+    rabbitmq: RabbitmqSettings
+    smtp_settings: SMTPSettings
 
 
 def load_settings() -> Settings:
@@ -84,11 +100,18 @@ def load_settings() -> Settings:
             redis_port=int(os.environ["REDIS_PORT"]),
             redis_password=os.environ["REDIS_PASSWORD"],
         ),
-        # rabbitmq=RabbitmqSettings(
-        #     rabbit_host=os.environ["RABBITMQ_HOST"],
-        #     rabbit_port=int(os.environ["RABBITMQ_PORT"]),
-        #     rabbit_username=os.environ["RABBITMQ_USER"],
-        #     rabbit_password=os.environ["RABBITMQ_PASS"],
-        #     rabbit_virtual_host=os.environ["RABBITMQ_VHOST"],
-        # ),
+        rabbitmq=RabbitmqSettings(
+            rabbit_host=os.environ["RABBITMQ_HOST"],
+            rabbit_port=int(os.environ["RABBITMQ_PORT"]),
+            rabbit_username=os.environ["RABBITMQ_USER"],
+            rabbit_password=os.environ["RABBITMQ_PASS"],
+            rabbit_virtual_host=os.environ["RABBITMQ_VHOST"],
+        ),
+        smtp_settings=SMTPSettings(
+            smtp_host=os.environ["SMTP_HOST"],
+            smtp_port=int(os.environ["SMTP_PORT"]),
+            smtp_login=os.environ["SMTP_LOGIN"],
+            smtp_password=os.environ["SMTP_PASSWORD"],
+            smtp_security=SmtpSecurity(os.environ["SMTP_SECURITY"].lower()),
+        ),
     )

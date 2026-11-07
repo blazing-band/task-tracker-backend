@@ -1,0 +1,1 @@
+from .send_user_registered_email import send_user_registered_email as send_user_registered_email

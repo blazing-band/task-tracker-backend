@@ -2,7 +2,8 @@ from dishka import Provider
 from dishka.integrations.fastapi import FastapiProvider
 
 from .providers import (
-    # CeleryProvider,  # TODO: celery is disabled for now
+    CeleryProvider,
+    CeleryServicesProvider,
     InteractorsProvider,
     RedisProvider,
     RepositoriesProvider,
@@ -19,5 +20,11 @@ def get_providers() -> list[Provider]:
         InteractorsProvider(),
         RepositoriesProvider(),
         RedisProvider(),
-        # CeleryProvider(),
+        CeleryProvider(),
+    ]
+
+
+def get_celery_providers() -> list[Provider]:
+    return [
+        CeleryServicesProvider(),
     ]
