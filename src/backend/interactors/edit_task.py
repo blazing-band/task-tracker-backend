@@ -3,7 +3,6 @@ from dataclasses import dataclass
 from fastapi import Request
 
 from backend.dtos import TaskDto
-from backend.exceptions import NotFoundError
 from backend.repositories import TaskRepository
 from backend.services import IdentityProvider, TransactionManager
 
@@ -25,14 +24,9 @@ class EditTask:
     async def __call__(self, task_changes: EditTaskInput) -> TaskDto:
         user = await self.identity_provider.get_user(self.request)
         async with self.transaction_manager:
-            if not await self.task_repository.is_exists(task_id=task_changes.task_id, user_id=user.id):
-                raise NotFoundError("Task not founded")
-            task = await self.task_repository.edit(
-                task_id=task_changes.task_id,
-                user_id=user.id,
-                task_name=task_changes.task_name,
-                task_text=task_changes.task_text,
-            )
+            task = await self.task_repository.get(task_id=task_changes.task_id, user_id=user.id)
+            task.name = task_changes.task_name
+            task.text = task_changes.task_text
             return TaskDto(
                 id=task.id,
                 name=task.name,

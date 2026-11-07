@@ -1,10 +1,12 @@
 from dataclasses import asdict, dataclass
 
 from sqlalchemy import and_, case, cast, delete, exists, insert, select, update
+from sqlalchemy.exc import NoResultFound
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.database.models.task import task_table
 from backend.entities import Task, TaskStatus
+from backend.exceptions import NotFoundError
 
 
 @dataclass(slots=True, frozen=True)
@@ -68,12 +70,16 @@ class TaskRepository:
         result = await self.session.execute(query)
         return result.scalar_one()
 
-    async def edit(self, task_id: int, user_id: int, task_name: str, task_text: str) -> Task:
-        query = (
-            update(Task)
-            .where(and_(task_table.c.id == task_id, task_table.c.user_id == user_id))
-            .values(name=task_name, text=task_text)
-            .returning(Task)
-        )
+    async def get(self, task_id: int, user_id: int) -> Task:
+        """
+        Return user's task tracked by the session, or None if it doesn't exist.
+        :param task_id:
+        :param user_id:
+        :return:
+        """
+        query = select(Task).where(and_(task_table.c.id == task_id, task_table.c.user_id == user_id))
         result = await self.session.execute(query)
-        return result.scalar_one()
+        try:
+            return result.scalar_one()
+        except NoResultFound as e:
+            raise NotFoundError("Task not founded") from e
