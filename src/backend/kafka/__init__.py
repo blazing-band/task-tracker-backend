@@ -1,0 +1,2 @@
+from .daily_tasks_data_producer import DailyTasksDataProducer as DailyTasksDataProducer
+from .kafka_consumer import KafkaConsumer as KafkaConsumer

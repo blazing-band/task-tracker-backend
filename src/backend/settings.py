@@ -20,6 +20,7 @@ class DataBaseSettings:
 @dataclass(frozen=True, slots=True, kw_only=True)
 class AppSettings:
     cors_origins: list[str]
+    app_timezone: str
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
@@ -69,6 +70,12 @@ class SMTPSettings:
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
+class KafkaSettings:
+    bootstrap_servers: str
+    # daily_report_topic: str
+
+
+@dataclass(frozen=True, slots=True, kw_only=True)
 class Settings:
     db: DataBaseSettings
     app: AppSettings
@@ -76,6 +83,7 @@ class Settings:
     redis: RedisSettings
     rabbitmq: RabbitmqSettings
     smtp_settings: SMTPSettings
+    kafka: KafkaSettings
 
 
 def load_settings() -> Settings:
@@ -88,7 +96,10 @@ def load_settings() -> Settings:
             db_host=os.environ["DB_HOST"],
             db_port=os.environ["DB_PORT"],
         ),
-        app=AppSettings(cors_origins=os.environ["CORS_ORIGINS"].split(",")),
+        app=AppSettings(
+            cors_origins=os.environ["CORS_ORIGINS"].split(","),
+            app_timezone=os.environ["TIMEZONE"]
+        ),
         jwt=JWTSettings(
             jwt_secret=os.environ["JWT_SECRET"],
             jwt_algorithm=os.environ["JWT_ALGORITHM"],
@@ -113,5 +124,9 @@ def load_settings() -> Settings:
             smtp_login=os.environ["SMTP_LOGIN"],
             smtp_password=os.environ["SMTP_PASSWORD"],
             smtp_security=SmtpSecurity(os.environ["SMTP_SECURITY"].lower()),
+        ),
+        kafka=KafkaSettings(
+            bootstrap_servers=os.environ["KAFKA_BOOTSTRAP_SERVERS"],
+            # daily_report_topic=os.environ["KAFKA_DAILY_REPORT_TOPIC"],
         ),
     )

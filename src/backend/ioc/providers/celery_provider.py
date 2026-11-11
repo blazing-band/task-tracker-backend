@@ -10,6 +10,6 @@ from backend.settings import Settings
 class CeleryProvider(Provider):
     @provide(scope=Scope.APP)
     def get_celery(self, settings: Settings) -> Iterator[Celery]:
-        celery = create_celery(settings.rabbitmq)
+        celery = create_celery(settings)
         yield celery
         celery.close()

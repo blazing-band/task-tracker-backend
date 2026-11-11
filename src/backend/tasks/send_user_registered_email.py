@@ -10,12 +10,10 @@ from backend.services import EmailService
 @inject
 def send_user_registered_email(
     email: str,
-    subject: str,
-    message: str,
     email_service: FromDishka[EmailService],
 ) -> None:
     email_service.send_message(
-        subject=subject,
-        body=message,
+        subject="Welcome to Task Tracker!",
+        body="Your account has been successfully created.",
         destination_email=email,
     )
