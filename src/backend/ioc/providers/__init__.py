@@ -1,7 +1,10 @@
 from .celery_provider import CeleryProvider as CeleryProvider
+from .celery_repositories_provider import CeleryRepositoriesProvider as CeleryRepositoriesProvider
 from .celery_services_provider import CeleryServicesProvider as CeleryServicesProvider
 from .interactors_provider import InteractorsProvider as InteractorsProvider
+from .kafka_provider import KafkaProvider as KafkaProvider
 from .redis_provider import RedisProvider as RedisProvider
 from .repositories_provider import RepositoriesProvider as RepositoriesProvider
 from .services_provider import ServicesProvider as ServicesProvider
 from .sqlalchemy_provider import SqlAlchemyProvider as SqlAlchemyProvider
+from .sync_sqlalchemy_provider import SyncSqlAlchemyProvider as SyncSqlAlchemyProvider

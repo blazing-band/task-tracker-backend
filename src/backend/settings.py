@@ -2,6 +2,9 @@ import os
 from dataclasses import dataclass
 from enum import StrEnum
 
+# Timezone of the Celery beat schedule and of daily reports
+TIMEZONE = "Europe/Moscow"
+
 
 @dataclass(frozen=True, slots=True, kw_only=True)
 class DataBaseSettings:
@@ -69,6 +72,12 @@ class SMTPSettings:
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
+class KafkaSettings:
+    bootstrap_servers: str
+    daily_report_topic: str
+
+
+@dataclass(frozen=True, slots=True, kw_only=True)
 class Settings:
     db: DataBaseSettings
     app: AppSettings
@@ -76,6 +85,7 @@ class Settings:
     redis: RedisSettings
     rabbitmq: RabbitmqSettings
     smtp_settings: SMTPSettings
+    kafka: KafkaSettings
 
 
 def load_settings() -> Settings:
@@ -113,5 +123,9 @@ def load_settings() -> Settings:
             smtp_login=os.environ["SMTP_LOGIN"],
             smtp_password=os.environ["SMTP_PASSWORD"],
             smtp_security=SmtpSecurity(os.environ["SMTP_SECURITY"].lower()),
+        ),
+        kafka=KafkaSettings(
+            bootstrap_servers=os.environ["KAFKA_BOOTSTRAP_SERVERS"],
+            daily_report_topic=os.environ["KAFKA_DAILY_REPORT_TOPIC"],
         ),
     )
