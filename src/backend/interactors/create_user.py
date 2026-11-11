@@ -43,9 +43,6 @@ class CreateUser:
             refresh_jti = self.jwt_service.get_payload(refresh_token)["jti"]
             await self.refresh_token_whitelist_repository.add(refresh_jti)
 
-        # Publish only after commit so no email goes out for a rolled-back user.
-        # `user` is expired after commit, so use the input email instead of lazy-loading it.
-        # The welcome email is not critical: a broker outage must not fail registration.
         try:
             self.email_producer.send_user_registration_email(email=new_user.email)
         except Exception:
