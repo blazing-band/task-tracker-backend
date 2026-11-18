@@ -25,6 +25,10 @@ class DailyReportConsumer:
                 if msg.error():
                     raise KafkaException(msg.error())
                 else:
+                    # TODO call celery task for sending report by email.
+                    # TODO Maybe create explicit entrypoint for kafka consumer
+                    # TODO implement logic for different topics in current consumer
+
 
 
         finally:

@@ -10,8 +10,14 @@ class EmailProducer:
     def send_user_registration_email(self, email: str) -> None:
         subject = "Welcome to Task Tracker!"
         message = "Your account has been successfully created."
-        # Exchange and routing key come from task_routes in create_celery
         self.celery_app.send_task(
             CeleryTaskName.SEND_USER_REGISTERED_EMAIL,
+            kwargs={"email": email, "subject": subject, "message": message},
+        )
+
+    def send_daily_report_email(self, email: str, message: str) -> None:
+        subject = "Daily Report"
+        self.celery_app.send_task(
+            CeleryTaskName.SEND_USER_DAILY_REPORT_EMAIL,
             kwargs={"email": email, "subject": subject, "message": message},
         )

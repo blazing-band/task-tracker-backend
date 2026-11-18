@@ -9,6 +9,7 @@ from backend.settings import TIMEZONE, RabbitmqSettings
 
 class CeleryTaskName(StrEnum):
     SEND_USER_REGISTERED_EMAIL = "email_sender.send_user_registered_email"
+    SEND_USER_DAILY_REPORT_EMAIL = "email_sender.send_daily_report_email"
     SEND_USER_TASKS_STATISTICS = "backend.send_user_tasks_statistics"
 
 
@@ -18,7 +19,7 @@ class RabbitMqExchange(StrEnum):
 
 class RabbitMqQueues(StrEnum):
     REGISTRATION_EMAIL = "registration_email"
-    TASKS_STATISTICS = "tasks_statistics"
+    DAILY_REPORT = "daily_report"
 
 
 def create_celery(rabbitmq_settings: RabbitmqSettings) -> Celery:
@@ -28,7 +29,7 @@ def create_celery(rabbitmq_settings: RabbitmqSettings) -> Celery:
     # RabbitMQ 4.x forbids transient non-exclusive queues
     celery_app.conf.control_queue_exclusive = True
     celery_app.conf.event_queue_exclusive = True
-    celery_app.conf.update(enable_utc=True, timezone=TIMEZONE)
+    celery_app.conf.timezone = TIMEZONE
 
     email_exchange = Exchange(RabbitMqExchange.EMAIL, type="direct", durable=True)
 
@@ -40,9 +41,9 @@ def create_celery(rabbitmq_settings: RabbitmqSettings) -> Celery:
             durable=True,
         ),
         Queue(
-            RabbitMqQueues.TASKS_STATISTICS,
+            RabbitMqQueues.DAILY_REPORT,
             email_exchange,
-            routing_key=RabbitMqQueues.TASKS_STATISTICS,
+            routing_key=RabbitMqQueues.DAILY_REPORT,
             durable=True,
         ),
     )
@@ -53,10 +54,10 @@ def create_celery(rabbitmq_settings: RabbitmqSettings) -> Celery:
             "exchange": RabbitMqExchange.EMAIL,
             "routing_key": RabbitMqQueues.REGISTRATION_EMAIL,
         },
-        CeleryTaskName.SEND_USER_TASKS_STATISTICS: {
-            "queue": RabbitMqQueues.TASKS_STATISTICS,
+        CeleryTaskName.SEND_USER_DAILY_REPORT_EMAIL: {
+            "queue": RabbitMqQueues.DAILY_REPORT,
             "exchange": RabbitMqExchange.EMAIL,
-            "routing_key": RabbitMqQueues.TASKS_STATISTICS,
+            "routing_key": RabbitMqQueues.DAILY_REPORT,
         },
     }
 

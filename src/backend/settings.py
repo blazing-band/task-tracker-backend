@@ -1,7 +1,7 @@
 import os
 from dataclasses import dataclass
 from enum import StrEnum
-
+# TODO move timezone somewhere in settings
 # Timezone of the Celery beat schedule and of daily reports
 TIMEZONE = "Europe/Moscow"
 
